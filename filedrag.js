@@ -56,7 +56,6 @@
 				);
 	};
 	reader.readAsDataURL(selectedFile);
-	//return false;
 		
 	}
 
