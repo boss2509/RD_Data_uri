@@ -95,7 +95,7 @@
       var test_affichage = document.getElementById("test_affichage");
       var li = document.createElement("li");
       var a = document.createElement("a");
-      var t = document.createTextNode(row.dataURI);
+      var t = document.createTextNode(row.name + '______' + row.dataURI);
 
       a.addEventListener("click", function() {
         bdd.indexedDB.delete_Data(row.timeStamp);

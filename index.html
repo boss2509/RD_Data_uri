@@ -27,10 +27,39 @@
 
 </form>
 
+<form id="fichier_html" enctype="multipart/form-data">
+<input type="file" id="file_html" name="file_html" />
+</form>
+
 <div id="messages">
 <p>Status Messages</p>
 </div>
  <ul id="test_affichage"></ul>
-<script src="filedrag.js"></script>
+ <textarea id="text">
+ 
+ </textarea>
 </body>
+<script src="filedrag.js"></script>
+<script>
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+
+function replaceAll(find, replace, str) {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+document.getElementById('file_html').onchange=function(){
+
+    var reader = new FileReader();
+
+    reader.onload = function() {
+        var html  = 	((reader.result));
+		 var res = replaceAll("script", "scripppt", res)
+	   document.getElementById('text').value= (res);
+	
+    };
+    reader.readAsText(this.files[0]);
+};
+</script>
 </html>
