@@ -1,17 +1,11 @@
-/*
-filedrag.js - HTML5 File Drag & Drop demonstration
-Featured on SitePoint.com
-Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
-*/
+
 (function() {
 
-	// getElementById
 	function $id(id) {
 		return document.getElementById(id);
 	}
 
 
-	// output information
 	function Output(msg) {
 		var m = $id("messages");
 		m.innerHTML = msg;
@@ -37,44 +31,11 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
 
 		// process all File objects
 		for (var i = 0, f; f = files[i]; i++) {
-			ParseFile(f);
+			getDATAURL(f);
 		}
 
 	}
 
-
-	// output file information
-	function ParseFile(file) {
-	getDATAURL(file);
-
-		//var ext = file.name.split(".").pop().toLowerCase();	
-		//var reader = new FileReader();
-		//reader.onload = function() {
-		//	if(ext=="smil")
-		//	{
-		//		console.log(reader.result);
-		//		Output(
-		//		"<p><strong>" + file.name + ":</strong></p><pre>" +
-		//			'data:application/smil+xml;'+reader.result.split("data:;").pop()+
-		//			"</pre>"
-		//		);
-		//		//reader.readAsDataURL(file);
-		//	}
-		//	else
-		//	{
-		//		console.log(reader.result);
-		//		Output(
-		//		"<p><strong>" + file.name + ":</strong></p><pre>" +
-		//			reader.result+
-		//			"</pre>"
-		//		);
-		//	}
-		//}
-		//reader.readAsDataURL(file);
-			
-		
-	}
-	
 	function getDATAURL(file)
 	{
 	var ext = file.name.split(".").pop().toLowerCase();
@@ -105,7 +66,6 @@ Developed by Craig Buckler (@craigbuckler) of OptimalWorks.net
 		// file select
 		fileselect.addEventListener("change", FileSelectHandler, false);
 
-		// is XHR2 available?
 		var xhr = new XMLHttpRequest();
 		if (xhr.upload) {
 
