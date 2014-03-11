@@ -49,14 +49,59 @@ function escapeRegExp(str) {
 function replaceAll(find, replace, str) {
   return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
+
+function StringtoXML(text){
+if (window.ActiveXObject){
+var doc=new ActiveXObject('Microsoft.XMLDOM');
+doc.async='false';
+doc.loadXML(text);
+} else {
+var parser = new DOMParser().parseFromString(text,'text/html');
+var doc =  parser.documentElement;
+var scripts =  doc.getElementsByTagName('script');
+for (var i = 0; i < scripts.length; i++) {
+    var script = scripts[i];
+	if(script.getAttribute('src'))
+	{
+		alert(script.getAttribute('src'));
+		script.setAttribute('src', 'lol');
+	}
+			
+    // you might consider using a regex here
+}
+}
+return doc;
+} 
+
+
+function docEvaluateArray (expr, doc, context, resolver) {
+    var i, result, a = [];
+    doc = doc || (context ? context.ownerDocument : document);
+    resolver = resolver || null;
+    context = context || doc;
+	
+    result = doc.evaluate(expr, context, resolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    for(i = 0; i < result.snapshotLength; i++) {
+        a[i] = result.snapshotItem(i);
+    }
+    return a;
+}
 document.getElementById('file_html').onchange=function(){
 
     var reader = new FileReader();
 
     reader.onload = function() {
         var html  = 	((reader.result));
-		 var res = replaceAll("script", "scripppt", res)
-	   document.getElementById('text').value= (res);
+	   var  xml = (StringtoXML(html));
+	   console.log(xml);
+	   //console.log(getElementsBySrc('timesheet.js'), xml);
+	 //  console.log(xml);	
+	//  var res = xml.evaluate('//title', xml, null,  XPathResult.ANY_TYPE, null);
+	// var res =  docEvaluateArray('/head/script', xml);
+	// console.log(res);
+	//   console.log(res[0].nodeName);
+	   //alert(xml.stringValue);
+	   
 	
     };
     reader.readAsText(this.files[0]);
