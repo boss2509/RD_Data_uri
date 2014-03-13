@@ -1,12 +1,14 @@
 	var bdd = {};
+	var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+
     bdd.indexedDB = {};
     bdd.indexedDB.db = null;
-
     bdd.indexedDB.onerror = function(e) {
       console.log(e);
     };
 
     bdd.indexedDB.open = function() {
+		indexedDB.deleteDatabase('datas')
       var request = indexedDB.open("datas", 1);
 
       request.onupgradeneeded = function(e) {
@@ -14,11 +16,11 @@
 
         e.target.transaction.onerror = bdd.indexedDB.onerror;
 
-        if(db.objectStoreNames.contains("data")) {
-          db.deleteObjectStore("data");
+       if(db.objectStoreNames.contains("data")) {
+          db.deleteObjectStore("datas");
         }
 		
-        var store = db.createObjectStore("data",{keyPath: "timeStamp"});
+        var store = db.createObjectStore("data",{keyPath: "name"});
       };
 
       request.onsuccess = function(e) {
@@ -33,14 +35,11 @@
       var db = bdd.indexedDB.db;
       var trans = db.transaction(["data"], "readwrite");
       var store = trans.objectStore("data");
-
       var data = {
         "dataURI": dataURI,
-		"name":name,
-        "timeStamp": new Date().getTime(),
-      };
-
-      var request = store.put(data);
+		"name":name
+		};
+      var request = store.add(data);
 
       request.onsuccess = function(e) {
         bdd.indexedDB.getAllData();
@@ -87,6 +86,24 @@
         afficher(result.value);
         result.continue();
       };
+	  
+	   bdd.indexedDB.replacedatauri = function() {
+
+      var db = bdd.indexedDB.db;
+      var trans = db.transaction(["data"], "readwrite");
+      var store = trans.objectStore("data");
+
+      // Get everything in the store;
+      var keyRange = IDBKeyRange.lowerBound(0);
+      var cursorRequest = store.openCursor(keyRange);
+
+      cursorRequest.onsuccess = function(e) {
+        var result = e.target.result;
+        if(!!result == false)
+          return;
+
+        result.continue();
+      };
 
       cursorRequest.onerror = bdd.indexedDB.onerror;
     };
@@ -98,7 +115,7 @@
       var t = document.createTextNode(row.name + '______' + row.dataURI);
 
       a.addEventListener("click", function() {
-        bdd.indexedDB.delete_Data(row.timeStamp);
+        bdd.indexedDB.delete_Data(row.name);
       }, false);
 
       a.href = "#";
@@ -111,6 +128,11 @@
     function add_bdd(data, name) {
       bdd.indexedDB.add_bdd(data, name);
     }
+	
+	function replace_all_data()
+	{
+		bdd.indexedDB.getAllData();	
+	}
 
     function init() {
       bdd.indexedDB.open();

@@ -58,50 +58,51 @@ doc.loadXML(text);
 } else {
 var parser = new DOMParser().parseFromString(text,'text/html');
 var doc =  parser.documentElement;
-var scripts =  doc.getElementsByTagName('script');
-for (var i = 0; i < scripts.length; i++) {
-    var script = scripts[i];
-	if(script.getAttribute('src'))
-	{
-		alert(script.getAttribute('src'));
-		script.setAttribute('src', 'lol');
-	}
-			
-    // you might consider using a regex here
-}
 }
 return doc;
-} 
-
-
-function docEvaluateArray (expr, doc, context, resolver) {
-    var i, result, a = [];
-    doc = doc || (context ? context.ownerDocument : document);
-    resolver = resolver || null;
-    context = context || doc;
-	
-    result = doc.evaluate(expr, context, resolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    for(i = 0; i < result.snapshotLength; i++) {
-        a[i] = result.snapshotItem(i);
-    }
-    return a;
 }
+
+function test()
+{ 
+var db = bdd.indexedDB.db;
+      var trans = db.transaction(["data"], "readwrite");
+      var store = trans.objectStore("data");
+
+      // Get everything in the store;
+      var keyRange = IDBKeyRange.lowerBound(0);
+      var cursorRequest = store.openCursor(keyRange);
+
+      cursorRequest.onsuccess = function(e) {
+        var result = e.target.result;
+        if(!!result == false)
+          return;
+		console.log(result.value);
+        result.continue();
+      };
+
+}
+
+function getElementsByAttributeName(doc, tagName, attributeName, attributeValue) {
+  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length;
+  for (i=0; i<len; i++) {
+    n = els[i];
+	console.log(n);
+    if ((n.getAttribute('src')==attributeValue)) {
+      objs.push(els[i]);
+    }
+  }
+  return objs;
+}
+
 document.getElementById('file_html').onchange=function(){
 
     var reader = new FileReader();
 
     reader.onload = function() {
-        var html  = 	((reader.result));
-	   var  xml = (StringtoXML(html));
-	   console.log(xml);
-	   //console.log(getElementsBySrc('timesheet.js'), xml);
-	 //  console.log(xml);	
-	//  var res = xml.evaluate('//title', xml, null,  XPathResult.ANY_TYPE, null);
-	// var res =  docEvaluateArray('/head/script', xml);
-	// console.log(res);
-	//   console.log(res[0].nodeName);
-	   //alert(xml.stringValue);
-	   
+       var html  = 	((reader.result));
+	   var  doc = (StringtoXML(html));
+	   var obj = getElementsByAttributeName(doc, 'script', 'src', 'indexdb.js');
+	   obj[0].setAttribute('src','lol');	   
 	
     };
     reader.readAsText(this.files[0]);
