@@ -38,6 +38,7 @@
  <textarea id="text">
  
  </textarea>
+ <img src="./logo.jpg"/>
 </body>
 <script src="filedrag.js"></script>
 <script>
@@ -62,9 +63,9 @@ var doc =  parser.documentElement;
 return doc;
 }
 
-function test()
+function load_DB(doc)
 { 
-var db = bdd.indexedDB.db;
+		var db = bdd.indexedDB.db;
       var trans = db.transaction(["data"], "readwrite");
       var store = trans.objectStore("data");
 
@@ -76,22 +77,66 @@ var db = bdd.indexedDB.db;
         var result = e.target.result;
         if(!!result == false)
           return;
-		console.log(result.value);
+		changetoDataURI(doc, result.value);
         result.continue();
       };
 
 }
 
-function getElementsByAttributeName(doc, tagName, attributeName, attributeValue) {
-  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length;
+function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeValue) {
+  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length, src="";
   for (i=0; i<len; i++) {
     n = els[i];
-	console.log(n);
-    if ((n.getAttribute('src')==attributeValue)) {
-      objs.push(els[i]);
-    }
-  }
+	src = n.getAttribute('src');
+	if(src!==null)
+	{
+		var nom = src.split('/');
+		var nom_fichier = nom[nom.length-1];
+		if ((nom_fichier==attributeValue)) {
+		  objs.push(els[i]);
+		   objs[0].setAttribute('src', changeValue);	  
+			}
+		}
+	}
+
   return objs;
+}
+
+function getElementsByHref(doc, tagName, attributeName, attributeValue, changeValue) {
+  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length, src="";
+  for (i=0; i<len; i++) {
+    n = els[i];
+	href = n.getAttribute('href');
+	if(href!==null)
+	{
+		var nom = href.split('/');
+		var nom_fichier = nom[nom.length-1];
+		if ((nom_fichier==attributeValue)) {
+		  objs.push(els[i]);
+		   objs[0].setAttribute('href', changeValue);	  
+			}
+		}
+	}
+
+  return objs;
+}
+
+function changetoDataURI(doc, row)
+{
+	switch(row.ext)
+	{
+		case 'js':
+		getElementsBySrc(doc, 'script', 'src', row.name, row.dataURI);
+		break;
+		case 'css':
+		getElementsByHref(doc, 'link', 'href', row.name, row.dataURI);
+		break;
+		case 'png':
+		case 'jpg':
+		case 'jpeg':
+		getElementsBySrc(doc, 'img', 'src', row.name, row.dataURI);
+		break;
+	}
 }
 
 document.getElementById('file_html').onchange=function(){
@@ -101,8 +146,9 @@ document.getElementById('file_html').onchange=function(){
     reader.onload = function() {
        var html  = 	((reader.result));
 	   var  doc = (StringtoXML(html));
-	   var obj = getElementsByAttributeName(doc, 'script', 'src', 'indexdb.js');
-	   obj[0].setAttribute('src','lol');	   
+	   load_DB(doc);
+	   console.log(doc);
+	   
 	
     };
     reader.readAsText(this.files[0]);

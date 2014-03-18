@@ -31,13 +31,14 @@
       request.onerror = bdd.indexedDB.onerror;
     };
 
-    bdd.indexedDB.add_bdd = function(dataURI, name) {
+    bdd.indexedDB.add_bdd = function(dataURI, name, ext) {
       var db = bdd.indexedDB.db;
       var trans = db.transaction(["data"], "readwrite");
       var store = trans.objectStore("data");
       var data = {
         "dataURI": dataURI,
-		"name":name
+		"name":name, 
+		"ext":ext
 		};
       var request = store.add(data);
 
@@ -86,33 +87,13 @@
         afficher(result.value);
         result.continue();
       };
-	  
-	   bdd.indexedDB.replacedatauri = function() {
-
-      var db = bdd.indexedDB.db;
-      var trans = db.transaction(["data"], "readwrite");
-      var store = trans.objectStore("data");
-
-      // Get everything in the store;
-      var keyRange = IDBKeyRange.lowerBound(0);
-      var cursorRequest = store.openCursor(keyRange);
-
-      cursorRequest.onsuccess = function(e) {
-        var result = e.target.result;
-        if(!!result == false)
-          return;
-
-        result.continue();
-      };
-
-      cursorRequest.onerror = bdd.indexedDB.onerror;
-    };
+	}
 
     function afficher(row) {
       var test_affichage = document.getElementById("test_affichage");
       var li = document.createElement("li");
       var a = document.createElement("a");
-      var t = document.createTextNode(row.name + '______' + row.dataURI);
+      var t = document.createTextNode(row.ext + '_______' + row.name + '______' + row.dataURI);
 
       a.addEventListener("click", function() {
         bdd.indexedDB.delete_Data(row.name);
@@ -125,8 +106,8 @@
       test_affichage.appendChild(li);
     }
 
-    function add_bdd(data, name) {
-      bdd.indexedDB.add_bdd(data, name);
+    function add_bdd(data, name, ext) {
+      bdd.indexedDB.add_bdd(data, name, ext);
     }
 	
 	function replace_all_data()

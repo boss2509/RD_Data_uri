@@ -47,7 +47,7 @@
 			dataURL = reader.result;
 		else
 			dataURL = 'data:application/smil+xml;'+reader.result.split(";").pop();
-		add_bdd(dataURL, file.name);
+		add_bdd(dataURL, file.name, ext);
 		Output("<p><strong>" + file.name + ":</strong></p><pre>" + dataURL+"</pre>");
 	};
 	reader.readAsDataURL(selectedFile);
