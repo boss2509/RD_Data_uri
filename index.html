@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script>
+ var getFileSystemRoot = (function() {
+ 
+// private
+var root;
+// one-time retrieval of the root file system entry
+var init = function() {
+window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+function(fileSystem) {
+root = fileSystem.root;
+},
+onFileSystemError);
+};
+document.addEventListener("deviceready", init, true);
+ 
+// public function returns private root entry
+return function() {
+return root;
+};
+}()); // execute immediately
+</script>
 <meta charset="UTF-8" />
 <title>DATA URI TRANSFORMATION</title>
 <link rel="stylesheet" type="text/css" media="all" href="styles.css" />
-<script src="indexdb.js"></script>
+<script src="indexdb.js" id="script"></script>
 </head>
 <body>
 
@@ -139,6 +160,21 @@ function changetoDataURI(doc, row)
 	}
 }
 
+
+function getXmlString(xml) {
+  if (window.ActiveXObject) { return xml.xml; }
+  return new XMLSerializer().serializeToString(xml);
+}
+
+function SaveDatFileBro() {
+	var localstorage = getFileSystemRoot();
+	localstorage.root.getFile("info.txt", {create: true}, function(DatFile) {
+    DatFile.createWriter(function(DatContent) {
+      var blob = new Blob(["Lorem Ipsum"], {type: "text/plain"});
+      DatContent.write(blob);
+    });
+  });
+}
 document.getElementById('file_html').onchange=function(){
 
     var reader = new FileReader();
@@ -147,9 +183,7 @@ document.getElementById('file_html').onchange=function(){
        var html  = 	((reader.result));
 	   var  doc = (StringtoXML(html));
 	   load_DB(doc);
-	   console.log(doc);
-	   
-	
+	   SaveDatFileBro();
     };
     reader.readAsText(this.files[0]);
 };
