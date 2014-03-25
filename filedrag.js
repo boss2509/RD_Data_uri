@@ -1,4 +1,5 @@
-
+var donnee = new Array();
+var i = 0;
 (function() {
 
 	function $id(id) {
@@ -47,12 +48,21 @@
 			dataURL = reader.result;
 		else
 			dataURL = 'data:application/smil+xml;'+reader.result.split(";").pop();
-		add_bdd(dataURL, file.name, ext);
+		add(dataURL, file.name, ext);
 		Output("<p><strong>" + file.name + ":</strong></p><pre>" + dataURL+"</pre>");
 	};
 	reader.readAsDataURL(selectedFile);
 	//return false;
 		
+	}
+	
+	function add(dataURI, name, ext)
+	{
+		donnee[i] = new Array();
+		donnee[i]['name'] = name;
+		donnee[i]['dataURI'] = dataURI;
+		donnee[i]['ext'] =ext;
+		i++;
 	}
 
 

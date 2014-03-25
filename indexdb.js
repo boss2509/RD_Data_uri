@@ -1,6 +1,6 @@
 	var bdd = {};
 	var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
-
+	var donnee=new Array();
     bdd.indexedDB = {};
     bdd.indexedDB.db = null;
     bdd.indexedDB.onerror = function(e) {
@@ -23,10 +23,10 @@
         var store = db.createObjectStore("data",{keyPath: "name"});
       };
 
-      request.onsuccess = function(e) {
-        bdd.indexedDB.db = e.target.result;
-        bdd.indexedDB.getAllData();
-      };
+     request.onsuccess = function(e) {
+       bdd.indexedDB.db = e.target.result;
+       //bdd.indexedDB.getAllData();
+     };
 
       request.onerror = bdd.indexedDB.onerror;
     };
@@ -68,6 +68,8 @@
     };
 
     bdd.indexedDB.getAllData = function() {
+	   donnee=new Array();
+	  var i=0;
       var test_affichage = document.getElementById("test_affichage");
       test_affichage.innerHTML = "";
 
@@ -83,7 +85,11 @@
         var result = e.target.result;
         if(!!result == false)
           return;
-
+		donnee[i] = new Array();
+		donnee[i]['name'] = result.value.name;
+		donnee[i]['dataURI'] = result.value.dataURI;
+		donnee[i]['ext'] = result.value.ext;
+		i++;
         afficher(result.value);
         result.continue();
       };

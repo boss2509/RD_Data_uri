@@ -1,31 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script>
- var getFileSystemRoot = (function() {
- 
-// private
-var root;
-// one-time retrieval of the root file system entry
-var init = function() {
-window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-function(fileSystem) {
-root = fileSystem.root;
-},
-onFileSystemError);
-};
-document.addEventListener("deviceready", init, true);
- 
-// public function returns private root entry
-return function() {
-return root;
-};
-}()); // execute immediately
-</script>
 <meta charset="UTF-8" />
 <title>DATA URI TRANSFORMATION</title>
 <link rel="stylesheet" type="text/css" media="all" href="styles.css" />
-<script src="indexdb.js" id="script"></script>
+<!--<script src="indexdb.js"></script>-->
+<script src="Blob.js"></script>
+<script src="FileSaver.js"></script>
 </head>
 <body>
 
@@ -50,27 +31,16 @@ return root;
 
 <form id="fichier_html" enctype="multipart/form-data">
 <input type="file" id="file_html" name="file_html" />
-</form>
 
+</form>
 <div id="messages">
 <p>Status Messages</p>
 </div>
  <ul id="test_affichage"></ul>
- <textarea id="text">
- 
- </textarea>
- <img src="./logo.jpg"/>
-</body>
+
+ </body>
 <script src="filedrag.js"></script>
 <script>
-function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-}
-
-
-function replaceAll(find, replace, str) {
-  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}
 
 function StringtoXML(text){
 if (window.ActiveXObject){
@@ -84,26 +54,6 @@ var doc =  parser.documentElement;
 return doc;
 }
 
-function load_DB(doc)
-{ 
-		var db = bdd.indexedDB.db;
-      var trans = db.transaction(["data"], "readwrite");
-      var store = trans.objectStore("data");
-
-      // Get everything in the store;
-      var keyRange = IDBKeyRange.lowerBound(0);
-      var cursorRequest = store.openCursor(keyRange);
-
-      cursorRequest.onsuccess = function(e) {
-        var result = e.target.result;
-        if(!!result == false)
-          return;
-		changetoDataURI(doc, result.value);
-        result.continue();
-      };
-
-}
-
 function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeValue) {
   var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length, src="";
   for (i=0; i<len; i++) {
@@ -114,8 +64,8 @@ function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeVal
 		var nom = src.split('/');
 		var nom_fichier = nom[nom.length-1];
 		if ((nom_fichier==attributeValue)) {
-		  objs.push(els[i]);
-		   objs[0].setAttribute('src', changeValue);	  
+		  els[i].setAttribute('src', changeValue);	
+		//objs[0].setAttribute('src', changeValue);	 
 			}
 		}
 	}
@@ -133,8 +83,7 @@ function getElementsByHref(doc, tagName, attributeName, attributeValue, changeVa
 		var nom = href.split('/');
 		var nom_fichier = nom[nom.length-1];
 		if ((nom_fichier==attributeValue)) {
-		  objs.push(els[i]);
-		   objs[0].setAttribute('href', changeValue);	  
+			els[i].setAttribute('href', changeValue);	  
 			}
 		}
 	}
@@ -142,50 +91,44 @@ function getElementsByHref(doc, tagName, attributeName, attributeValue, changeVa
   return objs;
 }
 
-function changetoDataURI(doc, row)
+function changetoDataURI(doc, name, dataURI, ext)
 {
-	switch(row.ext)
+	switch(ext)
 	{
 		case 'js':
-		getElementsBySrc(doc, 'script', 'src', row.name, row.dataURI);
+		getElementsBySrc(doc, 'script', 'src', name, dataURI);
 		break;
 		case 'css':
-		getElementsByHref(doc, 'link', 'href', row.name, row.dataURI);
+		case 'smil':
+		getElementsByHref(doc, 'link', 'href', name, dataURI);
 		break;
 		case 'png':
 		case 'jpg':
 		case 'jpeg':
-		getElementsBySrc(doc, 'img', 'src', row.name, row.dataURI);
+		getElementsBySrc(doc, 'img', 'src', name, dataURI);
 		break;
 	}
 }
-
-
-function getXmlString(xml) {
-  if (window.ActiveXObject) { return xml.xml; }
-  return new XMLSerializer().serializeToString(xml);
-}
-
-function SaveDatFileBro() {
-	var localstorage = getFileSystemRoot();
-	localstorage.root.getFile("info.txt", {create: true}, function(DatFile) {
-    DatFile.createWriter(function(DatContent) {
-      var blob = new Blob(["Lorem Ipsum"], {type: "text/plain"});
-      DatContent.write(blob);
-    });
-  });
-}
+(function (view){
+document = view.document;
 document.getElementById('file_html').onchange=function(){
-
+	get_blob = function() {
+	return view.Blob;
+	}
     var reader = new FileReader();
-
     reader.onload = function() {
-       var html  = 	((reader.result));
-	   var  doc = (StringtoXML(html));
-	   load_DB(doc);
-	   SaveDatFileBro();
-    };
+	   var  doc = (StringtoXML(reader.result));
+		for(i in donnee)
+			changetoDataURI(doc, donnee[i]['name'], donnee[i]['dataURI'], donnee[i]['ext'] );
+		
+		var txt = (doc.outerHTML);
+		var bb = get_blob();
+		var blob = new bb([txt], {type: "application/html;charset=" + document.characterSet});
+		saveAs(blob, "index.html");
+      };
+	  
     reader.readAsText(this.files[0]);
-};
+}
+}(self));
 </script>
 </html>
