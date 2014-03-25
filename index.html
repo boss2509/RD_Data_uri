@@ -55,7 +55,7 @@ return doc;
 }
 
 function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeValue) {
-  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length, src="";
+  var i, n, , els=doc.getElementsByTagName(tagName), len=els.length, src="";
   for (i=0; i<len; i++) {
     n = els[i];
 	src = n.getAttribute('src');
@@ -63,18 +63,15 @@ function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeVal
 	{
 		var nom = src.split('/');
 		var nom_fichier = nom[nom.length-1];
-		if ((nom_fichier==attributeValue)) {
+		if ((nom_fichier==attributeValue)) 
 		  els[i].setAttribute('src', changeValue);	
-		//objs[0].setAttribute('src', changeValue);	 
-			}
+			
 		}
 	}
-
-  return objs;
 }
 
 function getElementsByHref(doc, tagName, attributeName, attributeValue, changeValue) {
-  var i, n, objs=[], els=doc.getElementsByTagName(tagName), len=els.length, src="";
+  var i, n, els=doc.getElementsByTagName(tagName), len=els.length, src="";
   for (i=0; i<len; i++) {
     n = els[i];
 	href = n.getAttribute('href');
@@ -82,13 +79,11 @@ function getElementsByHref(doc, tagName, attributeName, attributeValue, changeVa
 	{
 		var nom = href.split('/');
 		var nom_fichier = nom[nom.length-1];
-		if ((nom_fichier==attributeValue)) {
+		if ((nom_fichier==attributeValue)) 
 			els[i].setAttribute('href', changeValue);	  
-			}
+			
 		}
 	}
-
-  return objs;
 }
 
 function changetoDataURI(doc, name, dataURI, ext)
