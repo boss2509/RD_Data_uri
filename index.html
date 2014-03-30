@@ -87,21 +87,20 @@ function getElementsByHref(doc, tagName, attributeName, attributeValue, changeVa
 
 function changetoDataURI(doc, name, dataURI, ext)
 {
-	switch(ext)
-	{
-		case 'js':
-		getElementsBySrc(doc, 'script', 'src', name, dataURI);
-		break;
-		case 'css':
-		case 'smil':
-		getElementsByHref(doc, 'link', 'href', name, dataURI);
-		break;
-		case 'png':
-		case 'jpg':
-		case 'jpeg':
+	if(dataURI.indexOf('image')<0)
+		switch(ext)
+		{
+			case 'js':
+			getElementsBySrc(doc, 'script', 'src', name, dataURI);
+			break;
+			case 'css':
+			case 'smil':
+			getElementsByHref(doc, 'link', 'href', name, dataURI);
+			break;
+		}
+	else
 		getElementsBySrc(doc, 'img', 'src', name, dataURI);
-		break;
-	}
+		
 }
 (function (view){
 document = view.document;
