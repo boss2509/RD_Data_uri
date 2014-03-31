@@ -9,7 +9,7 @@ var i = 0;
 
 	function Output(msg) {
 		var m = $id("messages");
-		m.innerHTML = msg;
+		m.innerHTML += msg;
 	}
 
 
@@ -49,12 +49,13 @@ var i = 0;
 		else
 			dataURL = 'data:application/smil+xml;'+reader.result.split(";").pop();
 		add(dataURL, file.name, ext);
-		Output("<p><strong>" + file.name + ":</strong></p><pre>" + dataURL+"</pre>");
+		Output("<p><strong>" + file.name + "</strong><a onclick=\"delete_file("+(i-1)+", this);\"> Delete</a></p>");
 	};
 	reader.readAsDataURL(selectedFile);
 	//return false;
 		
 	}
+	
 	
 	function add(dataURI, name, ext)
 	{

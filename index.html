@@ -2,16 +2,17 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<title>DATA URI TRANSFORMATION</title>
+<title>DUD</title>
 <link rel="stylesheet" type="text/css" media="all" href="styles.css" />
 <script src="Blob.js"></script>
 <script src="FileSaver.js"></script>
 </head>
+<h1 align="center">DUD</h2>
 <body>
 
 <form id="upload" action="index.html" method="POST" enctype="multipart/form-data">
 <fieldset>
-<legend>HTML File Upload</legend>
+<legend>Config files upload</legend>
 
 <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
 <div>
@@ -26,14 +27,18 @@
 
 </fieldset>
 
+<fieldset>
+<legend>HTML File</legend>
+
 </form>
 
 <form id="fichier_html" enctype="multipart/form-data">
 <input type="file" id="file_html" name="file_html" />
 
 </form>
+</fieldset>
 <div id="messages">
-<p>Status Messages</p>
+<p>Uploaded files</p>
 </div>
  <ul id="test_affichage"></ul>
 
@@ -54,7 +59,7 @@ return doc;
 }
 
 function getElementsBySrc(doc, tagName, attributeName, attributeValue, changeValue) {
-  var i, n, , els=doc.getElementsByTagName(tagName), len=els.length, src="";
+  var i, n, els=doc.getElementsByTagName(tagName), len=els.length, src="";
   for (i=0; i<len; i++) {
     n = els[i];
 	src = n.getAttribute('src');
@@ -85,6 +90,12 @@ function getElementsByHref(doc, tagName, attributeName, attributeValue, changeVa
 	}
 }
 
+function delete_file(id, elem)
+{
+	donnee.splice(id, 1);
+	elem.parentNode.innerHTML="";
+}
+
 function changetoDataURI(doc, name, dataURI, ext)
 {
 	if(dataURI.indexOf('image')<0)
@@ -112,7 +123,7 @@ document.getElementById('file_html').onchange=function(){
     reader.onload = function() {
 	   var  doc = (StringtoXML(reader.result));
 		for(i in donnee)
-			changetoDataURI(doc, donnee[i]['name'], donnee[i]['dataURI'], donnee[i]['ext'] );
+			changetoDataURI(doc, donnee[i]['name'], donnee[i]['dataURI'], donnee[i]['ext']);
 		
 		var txt = (doc.outerHTML);
 		var bb = get_blob();
