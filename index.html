@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<title>DUD</title>
-<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
-<script src="Blob.js"></script>
-<script src="FileSaver.js"></script>
+	<meta charset="UTF-8" />
+	<title>DUD</title>
+	<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+	<script src="Blob.js"></script>
+	<script src="FileSaver.js"></script>
 </head>
-<h1 align="center">DUD</h2>
 <body>
-
-<form id="upload" action="index.html" method="POST" enctype="multipart/form-data">
-<fieldset>
-<legend>Config files upload</legend>
-
-<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+<div class="ruban">
+	<h1 align="center" >DataURI Document</h1>
+</div>
 <div>
-	<label for="fileselect">Files to upload:</label>
-	<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
-	<div id="filedrag">or drop files here</div>
-</div>
+	<form id="upload" action="index.html" method="POST" enctype="multipart/form-data">
+		<fieldset>
+			<legend>Config files upload</legend>
 
-<div id="submitbutton">
-	<button type="submit">Upload Files</button>
-</div>
+			<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+			<div>
+				<label for="fileselect">Files to upload:</label>
+				<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+				<div id="filedrag">or drop files here</div>
+			</div>
 
+			<div id="submitbutton">
+				<button type="submit">Upload Files</button>
+			</div>
+
+			<div id="messages">
+			<p>Uploaded files</p>
+			</div>
+
+		</fieldset>
+
+	<fieldset>
+	<legend>HTML File</legend>
+
+	</form>
+
+
+	<form id="fichier_html" enctype="multipart/form-data">
+	<input type="file" id="file_html" name="file_html" />
+
+	</form>
 </fieldset>
-
-<fieldset>
-<legend>HTML File</legend>
-
-</form>
-
-<form id="fichier_html" enctype="multipart/form-data">
-<input type="file" id="file_html" name="file_html" />
-
-</form>
-</fieldset>
-<div id="messages">
-<p>Uploaded files</p>
 </div>
- <ul id="test_affichage"></ul>
-
- </body>
+</body>
+<footer>
 <script src="filedrag.js"></script>
 <script>
 
@@ -135,4 +139,5 @@ document.getElementById('file_html').onchange=function(){
 }
 }(self));
 </script>
+</footer>
 </html>

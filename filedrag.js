@@ -49,7 +49,7 @@ var i = 0;
 		else
 			dataURL = 'data:application/smil+xml;'+reader.result.split(";").pop();
 		add(dataURL, file.name, ext);
-		Output("<p><strong>" + file.name + "</strong><a onclick=\"delete_file("+(i-1)+", this);\"> Delete</a></p>");
+		Output("<p><strong>" + file.name + "</strong>    <img src=\"./delete.gif\" width=\"10px\" onclick=\"delete_file("+(i-1)+", this);\"> </img></p>");
 	};
 	reader.readAsDataURL(selectedFile);
 	//return false;
